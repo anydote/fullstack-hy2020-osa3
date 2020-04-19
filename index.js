@@ -39,13 +39,9 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end()
 })
 
-const generateId = () => {
-  return Math.floor(Math.random() * 1000000000) 
-}
-
 app.post('/api/persons', (req, res) => {
   const body = req.body
-  const names = persons.map(p => p.name)
+  // const names = persons.map(p => p.name)
 
   if (!body.name) {
     return res.status(400).json({ 
@@ -59,21 +55,20 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
-  if (names.includes(body.name)) {
-    return res.status(400).json({ 
-      error: 'Name must be unique' 
-    })
-  }
+  // if (names.includes(body.name)) {
+  //   return res.status(400).json({ 
+  //     error: 'Name must be unique' 
+  //   })
+  // }
 
-  const person = {
+  const person = new Person({
     name: body.name,
-    number: body.number,
-    id: generateId(),
-  }
+    number: body.number
+  })
   
-  persons = persons.concat(person)
-
-  res.json(person)
+  person.save().then(savedPerson => {
+    res.json(savedPerson.toJSON())
+  })
 })
 
 const PORT = process.env.PORT
