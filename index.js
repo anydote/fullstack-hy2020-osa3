@@ -1,7 +1,9 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let persons = [
   { 
@@ -25,8 +27,6 @@ let persons = [
     "id": 4
   }
 ]
-
-const names = persons.map(p => p.name)
 
 app.get('/api/persons', (req, res) => {
   res.json(persons)
@@ -63,6 +63,7 @@ const generateId = () => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
+  const names = persons.map(p => p.name)
 
   if (!body.name) {
     return res.status(400).json({ 
