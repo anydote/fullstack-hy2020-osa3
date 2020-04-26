@@ -16,10 +16,12 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/info', (request, response) => {
   const now = new Date()
-  response.send(`
+  Person.find({}).then(persons => {
+    response.send(`
     <p>The phonebook contains info about ${persons.length} people.</p>
     <p>${now}</p>
   `)
+  })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
