@@ -20,29 +20,32 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 switch (process.argv.length) {
-  case 3:
-    console.log('phonebook:')
-    Person.find({}).then(result => {
-      result.forEach(person => {
-        console.log(person.name, person.number)
-      })
-      mongoose.connection.close()
-    })    
-    break
-  case 4:
-    console.log('Give both a name and a number')
-    process.exit(1)
-  case 5:
-    const person = new Person({
-      name: process.argv[3],
-      number: process.argv[4]
+case 3:
+  console.log('phonebook:')
+  Person.find({}).then(result => {
+    result.forEach(person => {
+      console.log(person.name, person.number)
     })
-    
-    person.save().then(response => {
-      console.log(`Added ${person.name} ${person.number} to phonebook`)
-      mongoose.connection.close()
-    })
-  default:
-    console.log('Too many parameters')
-    process.exit(1)
+    mongoose.connection.close()
+  })
+  break
+case 4:
+  console.log('Give both a name and a number')
+  process.exit(1)
+  break
+case 5: {
+  const person = new Person({
+    name: process.argv[3],
+    number: process.argv[4]
+  })
+
+  person.save().then(() => {
+    console.log(`Added ${person.name} ${person.number} to phonebook`)
+    mongoose.connection.close()
+  })
+  break
+}
+default:
+  console.log('Too many parameters')
+  process.exit(1)
 }
